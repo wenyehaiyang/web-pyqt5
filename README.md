@@ -21,7 +21,7 @@ clone仓库以后，按照本文安装好环境，运行PyQt5exploreJSPY.py
 ##### 1、准备环境：
 （1）安装python，这就不多说了，网上很多教程嘿嘿。
 （2）安装pyqt5，在pyqt5 5.12版本之前pyqt5包内包含QWebEngineView，可以直接pip install pyqt5==5.11或者之前的版本，安装完毕就可以导入了from PyQt5.QtWebEngineWidgets import QWebEngineView；在之后的版本，安装pyqt5之后，需要另外安装pyqtwebengine（pip install PyQtWebEngine），说明一下PyQtWebEngine可以适配多个版本的pyqt5，推荐与pyqt5版本一致。
-（3）下载qwebchannel.js，下载地址：https://doc.qt.io/qt-5.9/qtwebengine-webenginewidgets-markdowneditor-resources-qwebchannel-js.html。（PS：这是官网地址，如果地址失效可以百度qwebchannel.js找到qwebchannel.js）
+（3）下载qwebchannel.js，下载地址：[https://doc.qt.io/qt-5.9/qtwebengine-webenginewidgets-markdowneditor-resources-qwebchannel-js.html](https://doc.qt.io/qt-5.9/qtwebengine-webenginewidgets-markdowneditor-resources-qwebchannel-js.html)。PS：这是官网地址，如果地址失效可以百度qwebchannel.js找到
 ##### 2、QWebEngineView端
 直接看代码嘻嘻：
 
