@@ -136,7 +136,7 @@ if __name__ == '__main__':
 </body>
 </html>
 ```
-###### 效果见我的博文：https://blog.csdn.net/weixin_43866138/article/details/104281399；
+###### 效果见我的博文：https://blog.csdn.net/weixin_43866138/article/details/104281399
 
 ###### 3、补充：如果您从本地端口加载web文件，可以使用http.server监听本地端口
 直接看代码嘻嘻：
