@@ -4,12 +4,15 @@ import http.server
 import os
 import queue
 from functools import partial
-from asyncBase_native import runTask  # 这是我写的一个线程装饰器，被装饰的函数在被调用时会另外加载线程执行，具体代码请移步我的github嘿嘿
+from .asyncBase_native import runTask  # 这是我写的一个线程装饰器，被装饰的函数在被调用时会另外加载线程执行，具体代码请移步我的github嘿嘿
+import webbrowser
 
 __Author__ = '''wenye&hunan'''
 
 # 定义路径，以免在不同操作系统出错
 STATIC_PATH_MAIN = os.path.join(os.getcwd(), 'dist', 'mainpage')  # 在这里拼接需要服务的静态文件路径
+
+print(STATIC_PATH_MAIN)
 
 PORT_MAIN = 64291  # 监听的端口，对于的QWebEngineView的load函数加载的url即为：localhost:PORT_MAIN
 
@@ -25,4 +28,8 @@ def http_server_main():
     with http.server.ThreadingHTTPServer(("", PORT_MAIN), handler_class) as httpd:
         q_line_main.put(httpd)
         print("serving at port", PORT_MAIN)
+        webbrowser.open('http://localhost:'+str(PORT_MAIN)+'/', new=2)
+
         httpd.serve_forever()
+
+

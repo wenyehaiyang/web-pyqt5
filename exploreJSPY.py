@@ -5,11 +5,17 @@ import os
 import time
 import urllib.request
 
+try: #python3
+    from urllib.request import urlopen
+except: #python2
+    from urllib2 import urlopen
+
 from PyQt5.QtWidgets import QApplication, QDesktopWidget
 from PyQt5.QtCore import QObject, pyqtSlot, QUrl, Qt, QPoint
 from PyQt5.QtWebChannel import QWebChannel
 from PyQt5.QtWebEngineWidgets import QWebEngineView
-from httpSeve.server_tool import http_server_main
+from httpServe.server_tool import http_server_main
+from httpServe import *
 
 __Author__ = '''wenye'''
 
@@ -57,9 +63,10 @@ if __name__ == '__main__':
     channel.registerObject('PyHandler', handler)  # 将前端处理对象在前端页面中注册为名PyHandler对象，此对象在前端访问时名称即为PyHandler'
     view.page().setWebChannel(channel)  # 挂载前端处理对象
     url_string = urllib.request.pathname2url(os.path.join(os.getcwd(), "index.html"))  # 加载本地html文件
+    
     # 当然您可以加载互联网行的url，也可自行监听本地端口，然后加载本地端口服务的资源，后面有介绍嘻嘻
-    # url_string = 'localhost:64291'   # 加载本地html文件
-    # print(url_string, '\n', os.path.join(os.getcwd(), "index.html"))
+   # url_string = 'localhost:64291'   # 加载本地html文件
+    print(url_string, '\n', os.path.join(os.getcwd(), "index.html"))
     view.load(QUrl(url_string))
     time.sleep(2)
     view.show()
