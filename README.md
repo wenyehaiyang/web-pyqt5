@@ -1,3 +1,34 @@
+# ================= ENGLISH =====================
+
+# PyQt5 builds interactive web&python application through QWebEngineView and QWebChannel
+### PyQt5 builds interactive web&python application through QWebEngineView and QWebChannel
+
+First of all, let's talk about the benefits of building interactive web & Python applications through QWebEngineView and QWebChannel. Ha ha, everything needs to be created
+
+1. It can greatly shorten your development cycle. As we all know, web development technology and cycle are excellent, and UI is also one of the tedious and time-consuming development work in our development process. If the UI and some logic of python application can be realized by web technology, it will save too much time;
+2. This can make python application and web technology deeply integrate and expand the application scope of python. Web engineers can easily cooperate with python engineers to develop applications with python advantages and web technology advantages.
+
+## content
+
+1. Preparation environment
+2. Register QWebChannel in QWebEngineView
+3. Register QWebChannel on html front page
+4. Write the function to be called in QWebEngineView (parameters can be attached)
+5. On the html front-end page, call the corresponding QWebEngineView function through QWebChannel
+6. Call HTML front-end code at QWebEngineView end and execute javascript code
+7. In addition, QWebEngineView loads the local html file, so it uses the file protocol. If it is to design other static resource requests, it is suggested that you can use http.server of python to monitor the local port, which can be realized
+Start codeword^^
+1. Preparation environment:
+
+(1) Install python, that's not to say. There are many online tutorials.
+(2) Install pyqt5. Before pyqt5 5.12, pyqt5 package contains QWebEngineView. You can install pyqt5 = = 5.11 or earlier directly. After installation, you can import from pyqt5.qtwebenginewidges import QWebEngineView. After pyqt5 is installed, you need to install pyqtwebengine (pip install PyQtWebEngine) shows that pyqtwebengine can adapt to multiple versions of pyqt5. It is recommended to be the same as pyqt5.
+(3) Download qwebchannel.js at https://doc.qt.io/qt-5.9/qtwebengine-webingenewidgets-markdowneditor-resources-qwebchannel-js.html. (PS: This is the official website address. If the address fails, you can find qwebchannel.js in Baidu qwebchannel.js)
+
+More on https://programmer.help/blogs/5e43bec486671.html
+
+
+# ================ CHINESE ====================
+
 # 通过QWebEngineView和QWebChannel搭建交互式web&python应用
 ### 首先来说说通过QWebEngineView和QWebChannel搭建交互式web&python应用的好处哈哈，万事皆是有需要才有创造嘛哈哈
 1、可以大幅缩短您的开发周期，众所周知，web开发技术和周期都非常优秀，而UI也是我们开发过程中繁琐费时的开发工作之一，如果python应用的UI和部分逻辑可以用web技术实现那将节省太多太多时间；
