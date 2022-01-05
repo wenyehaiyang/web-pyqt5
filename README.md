@@ -1,4 +1,4 @@
-# ================= ENGLISH =====================
+# ===== ENGLISH =======
 
 # PyQt5 builds interactive web&python application through QWebEngineView and QWebChannel
 ### PyQt5 builds interactive web&python application through QWebEngineView and QWebChannel
@@ -178,7 +178,7 @@ Look directly at the code hee hee:
             httpd.serve_forever()
 ```
 Code address: https://github.com/wenyehaiyang/web-pyqt5 
-# ================ CHINESE ====================
+# ===== CHINESE =====
 
 # 通过QWebEngineView和QWebChannel搭建交互式web&python应用
 ### 首先来说说通过QWebEngineView和QWebChannel搭建交互式web&python应用的好处哈哈，万事皆是有需要才有创造嘛哈哈
