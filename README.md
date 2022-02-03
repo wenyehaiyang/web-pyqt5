@@ -1,3 +1,185 @@
+# ===== ENGLISH =======
+
+# PyQt5 builds interactive web&python application through QWebEngineView and QWebChannel
+### PyQt5 builds interactive web&python application through QWebEngineView and QWebChannel
+
+First of all, let's talk about the benefits of building interactive web & Python applications through QWebEngineView and QWebChannel. Ha ha, everything needs to be created
+
+1. It can greatly shorten your development cycle. As we all know, web development technology and cycle are excellent, and UI is also one of the tedious and time-consuming development work in our development process. If the UI and some logic of python application can be realized by web technology, it will save too much time;
+2. This can make python application and web technology deeply integrate and expand the application scope of python. Web engineers can easily cooperate with python engineers to develop applications with python advantages and web technology advantages.
+
+Code address: https://github.com/wenyehaiyang/web-pyqt5
+
+## content
+
+1. Preparation environment
+2. Register QWebChannel in QWebEngineView
+3. Register QWebChannel on html front page
+4. Write the function to be called in QWebEngineView (parameters can be attached)
+5. On the html front-end page, call the corresponding QWebEngineView function through QWebChannel
+6. Call HTML front-end code at QWebEngineView end and execute javascript code
+7. In addition, QWebEngineView loads the local html file, so it uses the file protocol. If it is to design other static resource requests, it is suggested that you can use http.server of python to monitor the local port, which can be realized
+
+Start codeword^^
+
+##1. Preparation environment:
+
+(1) Install python, that's not to say. There are many online tutorials.
+(2) Install pyqt5. Before pyqt5 5.12, pyqt5 package contains QWebEngineView. You can install pyqt5 = = 5.11 or earlier directly. After installation, you can import from pyqt5.qtwebenginewidges import QWebEngineView. After pyqt5 is installed, you need to install pyqtwebengine (pip install PyQtWebEngine) shows that pyqtwebengine can adapt to multiple versions of pyqt5. It is recommended to be the same as pyqt5.
+(3) Download qwebchannel.js at https://doc.qt.io/qt-5.9/qtwebengine-webingenewidgets-markdowneditor-resources-qwebchannel-js.html. (PS: This is the official website address. If the address fails, you can find qwebchannel.js in Baidu qwebchannel.js)
+
+##2. QWebEngineView end
+```
+Look directly at the code hee hee:
+
+    #!/usr/bin/env python
+    # -*- coding:utf-8 -*-
+    import sys
+    import os
+    import time
+    import urllib.request
+
+    from PyQt5.QtWidgets import QApplication, QDesktopWidget
+    from PyQt5.QtCore import QObject, pyqtSlot, QUrl, Qt, QPoint
+    from PyQt5.QtWebChannel import QWebChannel
+    from PyQt5.QtWebEngineWidgets import QWebEngineView
+    from httpSeve.server_tool import http_server_main
+
+    __Author__ = '''wenye'''
+
+
+    class CallHandler(QObject):
+
+        def __init__(self):
+            super(CallHandler, self).__init__()
+
+        @pyqtSlot(str, result=str)  # The first parameter is the type of parameter carried during callback
+        def init_home(self, str_args):
+            print('call received')
+            print('resolving......init home..')
+            print(str_args)  # View parameters
+            # #####
+            # The corresponding processing logic is written here, for example:
+            msg = 'Received from python News'
+            view.page().runJavaScript("alert('%s')" % msg)
+            view.page().runJavaScript("window.say_hello('%s')" % msg)
+            return 'hello, Python'
+
+
+    class WebEngine(QWebEngineView):
+        def __init__(self):
+            super(WebEngine, self).__init__()
+            self.setContextMenuPolicy(Qt.NoContextMenu)  # Set right-click menu rule to custom right-click menu
+            # self.customContextMenuRequested.connect(self.showRightMenu)  # The custom right-click menu will be loaded and displayed here. Don't we skip the details here
+
+            self.setWindowTitle('QWebChannel Interact with the front end')
+            self.resize(1100, 650)
+            cp = QDesktopWidget().availableGeometry().center()
+            self.move(QPoint(cp.x() - self.width() / 2, cp.y() - self.height() / 2))
+
+        def closeEvent(self, evt):
+            self.page().profile().clearHttpCache()  # Clear the cache of QWebEngineView
+            super(WebEngine, self).closeEvent(evt)
+
+
+    if __name__ == '__main__':
+        # Loader main window
+        app = QApplication(sys.argv)
+        view = WebEngine()
+        channel = QWebChannel()
+        handler = CallHandler()  # Instantiate the front-end processing object of QWebChannel
+        channel.registerObject('PyHandler', handler)  # Register the front-end processing object in the front-end page as the PyHandler object, which will be named PyHandler 'when accessed by the front-end
+        view.page().setWebChannel(channel)  # Mount the front-end processing object
+        url_string = urllib.request.pathname2url(os.path.join(os.getcwd(), "index.html"))  # Load local html file
+        # Of course, you can load the url of the Internet line, or listen to the local port by yourself, and then load the resources of the local port service
+        # url_string = 'localhost:64291'   # Load local html file
+        # print(url_string, '\n', os.path.join(os.getcwd(), "index.html"))
+        view.load(QUrl(url_string))
+        time.sleep(2)
+        view.show()
+        sys.exit(app.exec_())
+```
+##2, HTML terminal
+
+(1) Create a new index.html, and put qwebchannel.js in the index.html directory (other directories can also be imported correctly in HTML);
+(2) Register the QWebChannel instance in index.html.
+Look at the code directly
+```
+    <!DOCTYPE html>
+    <html lang=en>
+    <head>
+        <meta charset=utf-8>
+        <meta http-equiv=X-UA-Compatible content="IE=edge">
+        <meta name=viewport content="width=device-width,initial-scale=1">
+        <title>PyQt5 adopt QWebEngineView and QWebChannel Build interactive browser</title>
+        <style>body {
+            margin: 0;
+        }</style>
+        <script src="qwebchannel.js"></script><!--Load qwebchannel.js-->
+        <script>
+        window.onload = function () {
+            try {
+                new QWebChannel(qt.webChannelTransport, function (channel) {
+                    //Mount the instance of QWebChannel to window.PyHandler, and then call it through window.PyHandler in javascript
+                    window.PyHandler = channel.objects.PyHandler;
+                });
+            } catch (e) {
+                window.console.log(e)
+            }
+        }
+        </script>
+    </head>
+    <body>
+    <button onclick="window.PyHandler.init_home('This is from the front end python News')">Click to python Callback</button>
+    <div id="app"></div>
+    <script>
+        //Mount the method to window for easy access from webengine view
+        window.say_hello = function (msg) {
+            document.getElementById('app').append("This is from python Message received by:"+msg);
+        }
+    </script>
+    </body>
+    </html>
+```
+##The effect is as follows:
+
+
+3. Add: if you load the web file from the local port, you can use http.server to listen to the local port
+
+Look directly at the code hee hee:
+```
+    #!/usr/bin/env python
+    # -*- coding:utf-8 -*-
+    import http.server
+    import os
+    import queue
+    from functools import partial
+    from httpServe.asyncBase_native import runTask  # This is a thread decorator I wrote. When the decorated function is called, another thread will be loaded for execution. Please move to my github for specific code
+
+    __Author__ = '''wenye&hunan'''
+
+    # Define paths to avoid errors on different operating systems
+    STATIC_PATH_MAIN = os.path.join(os.getcwd(), 'dist', 'mainpage')  # Splicing the static file path to be served here
+
+    PORT_MAIN = 64291  # For the listening port, the url loaded by the load function of QWebEngineView is: localhost: port \ main
+
+    Handler = http.server.SimpleHTTPRequestHandler
+    # queue
+    q_line_main = queue.Queue()  # This queue is used to hold the handle of the server and operate the server. You can import this queue in the application specific logic
+
+
+    @runTask
+    def http_server_main():
+        handler_class = partial(Handler, directory=STATIC_PATH_MAIN)
+        handler_class.protocol_version = "HTTP/1.0"
+        with http.server.ThreadingHTTPServer(("", PORT_MAIN), handler_class) as httpd:
+            q_line_main.put(httpd)
+            print("serving at port", PORT_MAIN)
+            httpd.serve_forever()
+```
+Code address: https://github.com/wenyehaiyang/web-pyqt5 
+# ===== CHINESE =====
+
 # 通过QWebEngineView和QWebChannel搭建交互式web&python应用
 ### 首先来说说通过QWebEngineView和QWebChannel搭建交互式web&python应用的好处哈哈，万事皆是有需要才有创造嘛哈哈
 1、可以大幅缩短您的开发周期，众所周知，web开发技术和周期都非常优秀，而UI也是我们开发过程中繁琐费时的开发工作之一，如果python应用的UI和部分逻辑可以用web技术实现那将节省太多太多时间；
